@@ -14,9 +14,24 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://budget-tracker-opal-one.vercel.app",
+  "https://student-finance-insights-upz8.vercel.app",
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps, curl)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
