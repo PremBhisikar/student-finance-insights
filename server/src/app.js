@@ -34,7 +34,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.options("*", cors());
+app.options(/.*/, cors());
 
 // Health check route
 app.get("/", (req, res) => {
