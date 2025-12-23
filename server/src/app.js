@@ -22,7 +22,17 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: '*', credentials: true,
+    origin: function (origin, callback) {
+      // allow server-to-server & tools like curl/postman
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("CORS not allowed"));
+    },
+    credentials: true,
   })
 );
 
